@@ -16,6 +16,7 @@
       :headers="headers"
       :start-record="callback"
       :stop-record="callback"
+      :select-record="callback"
       :start-upload="callback"
       :successful-upload="callback"
       :failed-upload="callback"/>
@@ -38,7 +39,7 @@
     },
     methods: {
       callback (msg) {
-        console.debug('Event: ', msg)
+        console.log('Event: ', msg)
       },
       toggle () {
         this.showRecorder = !this.showRecorder

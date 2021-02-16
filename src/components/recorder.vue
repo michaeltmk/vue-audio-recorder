@@ -201,7 +201,7 @@
           :class="{'ar-records__record--selected': record.id === selected.id}"
           :key="record.id"
           v-for="(record, idx) in recordList"
-          @click="selected = record">
+          @click="choiceRecord(record)">
             <div
               class="ar__rm"
               v-if="record.id === selected.id"
@@ -211,9 +211,7 @@
         </div>
       </div>
 
-      <audio-player :compact="compact" :record="selected" :uploader-options="uploaderOptions"/>
-
-      <div :class="uploadStatusClasses" v-if="uploadStatus">{{message}}</div>
+      <audio-player :record="selected"/>
     </div>
   </div>
 </template>
@@ -240,6 +238,7 @@
       startUpload      : { type: Function },
       successfulUpload : { type: Function },
       uploadUrl        : { type: String   },
+      selectRecord     : { type: Function },
 
       successfulUploadMsg : { type: String, default: 'Upload successful' },
       failedUploadMsg     : { type: String, default: 'Upload fail'       }
@@ -318,6 +317,19 @@
         this.recordList.splice(idx, 1)
         this.$set(this.selected, 'url', null)
         this.$eventBus.$emit('remove-record')
+      },
+      choiceRecord (record) {
+        if (this.selected === record) {
+          return
+        }
+        this.selected = record
+        this.selectRecord && this.selectRecord(record)
+      },
+      _initRecorder () {
+        return new Recorder({
+          afterStop : this.afterStop,
+          micFailed : this.micFailed
+        })
       }
     },
     computed: {
